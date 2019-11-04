@@ -2,7 +2,7 @@
 
 
 run:
-	./interface 2
+	./serial 2
 
 build:
-	gcc -o interface interface.c
+	gcc -o serial serial
