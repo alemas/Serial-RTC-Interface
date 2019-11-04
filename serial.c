@@ -6,6 +6,11 @@
 #include <unistd.h>
 #include <errno.h>
 
+// #define port "/dev/ttyUSB0"
+#define port "/dev/cu.usbserial-1410"
+
+int fd;
+
 int config_serial(char *device, unsigned int baudrate)
 {
     struct termios options;
@@ -68,33 +73,159 @@ int config_serial(char *device, unsigned int baudrate)
 
     return fd;
 }
+
+void getInfo(char input) {
+
+    write(fd, &input, 1);
+
+    int buffer_size = 2;
+
+    if (input == 'F') buffer_size = 10;
+    if (input == 'f') buffer_size = 8;
+    if (input == 't' || input == 'T') buffer_size = 5;
+
+    char output[buffer_size];
+    read(fd, &output, buffer_size);
+    printf("\n%s\n", output);
+
+    
+}
+
+void config_time_inner_menu()
+{
+    int keepRunningInner = 1;
+    int menuOptionInner = -1;
+    do
+    {
+        printf("\n");
+        printf("Escolhar uma opção de data: \n");
+        printf("1 - Horario completo\n");
+        printf("2 - Data completa\n");
+        printf("-----------------------\n");
+        printf("3 - Hora\n");
+        printf("4 - Minuto\n");
+        printf("5 - Segundo\n");
+        printf("6 - Dia\n");
+        printf("7 - Mês\n");
+        printf("8 - Ano\n");
+        printf("9 - Voltar\n");
+
+        scanf("%d", &menuOptionInner);
+        switch (menuOptionInner)
+        {
+        case 1: getInfo('f');
+            break;
+        case 2: getInfo('F');
+            break;
+        case 3: getInfo('h');
+            break;
+        case 4: getInfo('m');
+            break;
+        case 5: getInfo('s');
+            break;
+        case 6: getInfo('d');
+            break;
+        case 7: getInfo('M');
+            break;
+        case 8: getInfo('y');
+            break;
+        case 9:
+            keepRunningInner = 0;
+            return;
+        default:
+            printf("Opção inválida\n");
+        }
+
+    } while (keepRunningInner);
+}
+
+void config_temperature_inner_menu()
+{
+    int keepRunningInner = 1;
+    int menuOptionInner = -1;
+    do
+    {
+        printf("\n");
+        printf("Escolhar uma opção de temperatura: \n");
+        printf("1 - Celsius\n");
+        printf("2 - Fahrenheit\n");
+        printf("3 - Voltar\n");
+
+        scanf("%d", &menuOptionInner);
+        switch (menuOptionInner)
+        {
+        case 1: getInfo('T');
+            break;
+        case 2: getInfo('t');
+            break;
+        case 3:
+            keepRunningInner = 0;
+            return;
+        default:
+            printf("Opção invalida\n");
+        }
+
+    } while (keepRunningInner);
+}
+
+void config_menu()
+{
+    int keepRunning = 1;
+    int menuOption = -1;
+
+    do
+    {
+        printf("\n");
+        printf("Escolhar uma opção: \n");
+        printf("1 - Data\n");
+        printf("2 - Temperatura\n");
+        printf("3 - Encerar\n");
+
+        scanf("%d", &menuOption);
+
+        switch (menuOption)
+        {
+        case 1:
+            config_time_inner_menu();
+            break;
+        case 2:
+            config_temperature_inner_menu();
+            break;
+        case 3:
+            printf("Finalizando... \n");
+            keepRunning = 0;
+            return;
+        default:
+            printf("Opção inválida\n");
+        }
+
+    } while (keepRunning);
+}
+
 int main(int argc, char **argv)
 {
-    int fd, val;
-    char a;
-    if (argc < 2)
-    {
-        printf("Usage: ./serial <char>");
-        return 0;
-    }
-    fd = config_serial("/dev/ttyUSB0", B9600);
+    // int fd, val;
+    // char a;
+    // if (argc < 2)
+    // {
+    //     printf("Usage: ./serial <char>");
+    //     return 0;
+    // }
+    fd = config_serial(port, B9600);
     if (fd < 0)
     {
         return 0;
     }
-    a = argv[1][0];
-    write(fd, &a, 1);
-    val=0;
-    
-    read(fd, &a, 1);
-    printf("%c\n", a);
-    val = (a<<8);
-    
-    read(fd, &a, 1);
-    val|=a;
-    printf("%c\n", a);
 
-    printf("%d\n", val);
-    close(fd);
+    // a = argv[1][0];
+    // write(fd, &a, 1);
+    // val = 0;
+
+    // read(fd, &a, 1);
+    // printf("%c\n", a);
+    // val = (a << 8);
+
+    config_menu();
+
     return 0;
 }

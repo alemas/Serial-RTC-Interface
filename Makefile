@@ -2,7 +2,10 @@
 
 
 run:
-	./serial 2
+	make build && ./serial
 
 build:
-	gcc -o serial serial
+	gcc -o serial serial.c
+
+clean:
+	rm -rf serial

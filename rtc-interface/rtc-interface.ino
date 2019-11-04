@@ -32,7 +32,7 @@ void loop() {
         break;
       case 'h': Serial.print(String(currentDate.Hour()));
         break;
-      case 'n': Serial.print(String(currentDate.Minute()));
+      case 'm': Serial.print(String(currentDate.Minute()));
         break;
       case 's': Serial.print(String(currentDate.Second()));
         break;
