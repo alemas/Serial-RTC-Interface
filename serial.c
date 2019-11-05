@@ -7,7 +7,7 @@
 #include <errno.h>
 
 // #define port "/dev/ttyUSB0"
-#define port "/dev/cu.usbserial-1410"
+#define port "/dev/cu.usbserial-1420"
 
 int fd;
 
@@ -78,11 +78,13 @@ void getInfo(char input) {
 
     write(fd, &input, 1);
 
-    int buffer_size = 2;
+    // Pega o primeiro byte do pacote que corresponde ao tamanho da mensagem
+    uint8_t buffer_size;
+    read(fd, &buffer_size, 1);
 
-    if (input == 'F') buffer_size = 10;
-    if (input == 'f') buffer_size = 8;
-    if (input == 't' || input == 'T') buffer_size = 5;
+    // if (input == 'F') buffer_size = 10;
+    // if (input == 'f') buffer_size = 8;
+    // if (input == 't' || input == 'T') buffer_size = 5;
 
     char output[buffer_size];
     read(fd, &output, buffer_size);
@@ -179,7 +181,7 @@ void config_menu()
         printf("Escolhar uma opção: \n");
         printf("1 - Data\n");
         printf("2 - Temperatura\n");
-        printf("3 - Encerar\n");
+        printf("3 - Encerrar\n");
 
         scanf("%d", &menuOption);
 

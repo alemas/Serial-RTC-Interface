@@ -11,8 +11,16 @@ void setup() {
   RtcDateTime currentTime = RtcDateTime(__DATE__, __TIME__);
   rtcObject.SetDateTime(currentTime);
 
-  Serial.println(rtcObject.GetDateTime());
+}
 
+void sendString(String message) {
+
+  uint8_t length = message.length() + 2;
+  message = ((uint8_t) message.length()) + message;
+  byte buffer[length];
+  message.getBytes(buffer, length);
+  
+  Serial.write(buffer, length);
 }
 
 void loop() {
@@ -24,17 +32,17 @@ void loop() {
     
     switch(value) {
       
-      case 'd': Serial.print(String(currentDate.Day()));
+      case 'd': sendString(String(currentDate.Day()));
         break;
-      case 'M': Serial.print(String(currentDate.Month()));
+      case 'M': sendString(String(currentDate.Month()));
         break;
-      case 'y': Serial.print(String(currentDate.Year()));
+      case 'y': sendString(String(currentDate.Year()));
         break;
-      case 'h': Serial.print(String(currentDate.Hour()));
+      case 'h': sendString(String(currentDate.Hour()));
         break;
-      case 'm': Serial.print(String(currentDate.Minute()));
+      case 'm': sendString(String(currentDate.Minute()));
         break;
-      case 's': Serial.print(String(currentDate.Second()));
+      case 's': sendString(String(currentDate.Second()));
         break;
       case 'F': {
       
@@ -43,7 +51,7 @@ void loop() {
         String year = String(currentDate.Year());
         String result = day + "/" + month + "/" + year;
         
-        Serial.print(result);
+        sendString(result);
       }
         
         break;
@@ -54,16 +62,16 @@ void loop() {
         String second = String(currentDate.Second());
         String result = hour + ":" + minute + ":" + second;
         
-        Serial.print(result);
+        sendString(result);
       }
         break;
       case 'T':
-        Serial.print(rtcObject.GetTemperature().AsFloatDegC());
+        sendString(String(rtcObject.GetTemperature().AsFloatDegC()));
         break;
       case 't':
-        Serial.print(rtcObject.GetTemperature().AsFloatDegF());
+        sendString(String(rtcObject.GetTemperature().AsFloatDegF()));
         break;
-      default: Serial.print("n entendi");
+      default: sendString("n entendi");
         break;
     }
   }
