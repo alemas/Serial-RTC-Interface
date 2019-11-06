@@ -82,15 +82,10 @@ void getInfo(char input) {
     uint8_t buffer_size;
     read(fd, &buffer_size, 1);
 
-    // if (input == 'F') buffer_size = 10;
-    // if (input == 'f') buffer_size = 8;
-    // if (input == 't' || input == 'T') buffer_size = 5;
-
+    // Pega o resto da mensagem de acordo com o tamanho
     char output[buffer_size];
     read(fd, &output, buffer_size);
     printf("\n%s\n", output);
-
-    
 }
 
 void config_time_inner_menu()
@@ -148,7 +143,7 @@ void config_temperature_inner_menu()
     do
     {
         printf("\n");
-        printf("Escolhar uma opção de temperatura: \n");
+        printf("Escolher uma opção de temperatura: \n");
         printf("1 - Celsius\n");
         printf("2 - Fahrenheit\n");
         printf("3 - Voltar\n");
@@ -206,27 +201,12 @@ void config_menu()
 
 int main(int argc, char **argv)
 {
-    // int fd, val;
-    // char a;
-    // if (argc < 2)
-    // {
-    //     printf("Usage: ./serial <char>");
-    //     return 0;
-    // }
     fd = config_serial(port, B9600);
     if (fd < 0)
     {
         return 0;
     }
-
-    // a = argv[1][0];
-    // write(fd, &a, 1);
-    // val = 0;
-
-    // read(fd, &a, 1);
-    // printf("%c\n", a);
-    // val = (a << 8);
-
+    
     config_menu();
 
     return 0;
